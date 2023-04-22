@@ -1,18 +1,85 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+
 import words from "./wordList.json";
-import { HangManDrawing } from "./HangManDrawing";
-import { HangManWord } from "./HangManWord";
+
+import { HangmanDrawing } from "./HangmanDrawing";
+import { HangmanWord } from "./HangmanWord";
 import { Keyboard } from "./Keyboard";
+
+function getWord() { // on génère un mot aléatoire parmis la liste
+  return words[Math.floor(Math.random() * words.length)]
+}
 
 function App() {
 
-  const [wordToGuess, setWordToGuess] = useState(() => {
-    return words[Math.floor(Math.random() * words.length)]
-  });
+  const [wordToGuess, setWordToGuess] = useState(getWord);
 
-  const [guessLetter, setGuessLetter] = useState<string[]>([])
+  // console.log('App', wordToGuess);
+
+  const [guessedLetters, setGuessedLetters] = useState<string[]>([])
   
-  console.log(wordToGuess);
+  // Filtrer le nombre de lettres incorrectes à partir du tableau guessLetter
+  // On filtre les lettres qui ne sont pas incluses dans le mot
+  const inCorrectLetters = guessedLetters.filter(letter => !wordToGuess.includes(letter))
+  
+
+  // Lose / Win
+  const isLoser = inCorrectLetters.length >= 6 // 6 chances de réussir
+  const isWinner = wordToGuess.split("").every(letter => guessedLetters.includes(letter)) // si les lettres choisies sont inclues dans le mot à trouver
+
+  const addGuessedLetter = useCallback((letter: string) => {
+    if (guessedLetters.includes(letter) || isWinner || isLoser) // bloque l'ajout de lettre via le clavier de l'ordinateur
+      return 
+        setGuessedLetters(currenLetters => [...currenLetters, letter])
+  },[guessedLetters, isLoser, isWinner])
+
+  // Cette fonction permet d'ajouter au tableau les lettres testées. 
+  // Si la lettre testée n'est pas contenue dans le mot à trouver, on passe a la suite
+  // function addGuessedLetter(letter: string) {
+  //  if (guessedLetters.includes(letter)) return 
+  //   setGuessedLetters(currenLetters => [...currenLetters, letter])
+  // }
+
+  useEffect(() => {
+
+    // Ajouter la possibilité d'utiliser le clavier à l'évenement
+    const handler = (e: KeyboardEvent) => {
+      const key = e.key
+      // utilisation des regex (ici, pour toute lettre comprise entre a et z)
+      if (!key.match(/^[a-z]$/)) return 
+      e.preventDefault();
+      // on passe a la fonction la letter du clavier
+      addGuessedLetter(key)
+    }
+
+    document.addEventListener("keypress", handler)
+
+    return () => {
+      document.removeEventListener("keypress", handler)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[guessedLetters])
+
+  // gestion du rafraichissement automatique de la page lors que le jeu est terminé
+  useEffect(() => {
+  const handler = (e: KeyboardEvent) => {
+    const key = e.key
+
+    e.preventDefault();
+
+    if (key !== "Enter") return 
+    // on initialise le state des lettres et du mot
+    setGuessedLetters([]);
+    setWordToGuess(getWord());
+
+  }
+
+  document.addEventListener("keypress", handler)
+
+  return () => {
+    document.removeEventListener("keypress", handler)
+  }
+})
 
   return (
     <div style={{
@@ -27,16 +94,22 @@ function App() {
         fontSize: "2rem",
         textAlign: "center"
       }}>
-        Lose
-        Win
+        {isWinner && "Gagné!!"}
+        {isLoser && "Perdu, rafraîchi la page pour recommencer"}
+
       </div>
 
-      <HangManDrawing />
+      <HangmanDrawing numberOfGuesses={inCorrectLetters.length} />
 
-      <HangManWord />
+      <HangmanWord reveal={isLoser} guessedLetters={guessedLetters} wordToGuess={wordToGuess} />
 
       <div style={{alignSelf:"stretch"}}>
-      <Keyboard />
+      <Keyboard 
+        disabled={isWinner || isLoser}
+        activeLetters={guessedLetters.filter(letter => wordToGuess.includes(letter))}
+        inactiveLetters={inCorrectLetters}
+        addGuessedLetter={addGuessedLetter} 
+      />
       </div>
 
       </div>
