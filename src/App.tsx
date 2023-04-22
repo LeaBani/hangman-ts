@@ -24,9 +24,10 @@ function App() {
   const isWinner = wordToGuess.split("").every(letter => guessedLetters.includes(letter)) // si les lettres choisies sont inclues dans le mot à trouver
 
   const addGuessedLetter = useCallback((letter: string) => {
-    if (guessedLetters.includes(letter)) return 
-    setGuessedLetters(currenLetters => [...currenLetters, letter])
-  },[guessedLetters])
+    if (guessedLetters.includes(letter) || isWinner || isLoser) // bloque l'ajout de lettre via le clavier de l'ordinateur
+      return 
+        setGuessedLetters(currenLetters => [...currenLetters, letter])
+  },[guessedLetters, isLoser, isWinner])
 
   // Cette fonction permet d'ajouter au tableau les lettres testées. 
   // Si la lettre testée n'est pas contenue dans le mot à trouver, on passe a la suite
@@ -74,10 +75,11 @@ function App() {
 
       <HangmanDrawing numberOfGuesses={inCorrectLetters.length} />
 
-      <HangmanWord guessedLetters={guessedLetters} wordToGuess={wordToGuess} />
+      <HangmanWord reveal={isLoser} guessedLetters={guessedLetters} wordToGuess={wordToGuess} />
 
       <div style={{alignSelf:"stretch"}}>
       <Keyboard 
+        disabled={isWinner || isLoser}
         activeLetters={guessedLetters.filter(letter => wordToGuess.includes(letter))}
         inactiveLetters={inCorrectLetters}
         addGuessedLetter={addGuessedLetter} 
