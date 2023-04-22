@@ -4,11 +4,13 @@ import { HangmanDrawing } from "./HangManDrawing";
 import { HangmanWord } from "./HangManWord";
 import { Keyboard } from "./Keyboard";
 
+function getWord() {
+  return words[Math.floor(Math.random() * words.length)]
+}
+
 function App() {
 
-  const [wordToGuess, setWordToGuess] = useState(() => {
-    return words[Math.floor(Math.random() * words.length)]
-  });
+  const [wordToGuess, setWordToGuess] = useState(getWord);
 
   console.log('wordToGuess', wordToGuess);
 
@@ -54,6 +56,27 @@ function App() {
       document.removeEventListener("keypress", handler)
     }
   },[guessedLetters])
+
+  // gestion du rafraichissement automatique de la page lors que le jeu est terminé
+  useEffect(() => {
+  const handler = (e: KeyboardEvent) => {
+    const key = e.key
+
+    e.preventDefault();
+
+    if (key !== "Enter") return 
+    // on initialise le state des lettres et du mot
+    setGuessedLetters([]);
+    setWordToGuess(getWord());
+
+  }
+
+  document.addEventListener("keypress", handler)
+
+  return () => {
+    document.removeEventListener("keypress", handler)
+  }
+})
 
   return (
     <div style={{
