@@ -10,13 +10,18 @@ function App() {
     return words[Math.floor(Math.random() * words.length)]
   });
 
+  console.log('wordToGuess', wordToGuess);
+
   const [guessedLetters, setGuessedLetters] = useState<string[]>([])
   
   // Filtrer le nombre de lettres incorrectes à partir du tableau guessLetter
   // On filtre les lettres qui ne sont pas incluses dans le mot
   const inCorrectLetters = guessedLetters.filter(letter => !wordToGuess.includes(letter))
-  console.log(wordToGuess);
+  
 
+  // Lose / Win
+  const isLoser = inCorrectLetters.length >= 6 // 6 chances de réussir
+  const isWinner = wordToGuess.split("").every(letter => guessedLetters.includes(letter)) // si les lettres choisies sont inclues dans le mot à trouver
 
   const addGuessedLetter = useCallback((letter: string) => {
     if (guessedLetters.includes(letter)) return 
@@ -62,8 +67,9 @@ function App() {
         fontSize: "2rem",
         textAlign: "center"
       }}>
-        Lose
-        Win
+        {isWinner && "Gagné!!"}
+        {isLoser && "Perdu, rafraîchi la page pour recommencer"}
+
       </div>
 
       <HangmanDrawing numberOfGuesses={inCorrectLetters.length} />
