@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import words from "./wordList.json";
 import { HangmanDrawing } from "./HangManDrawing";
 import { HangmanWord } from "./HangManWord";
@@ -17,12 +17,18 @@ function App() {
   const inCorrectLetters = guessedLetters.filter(letter => !wordToGuess.includes(letter))
   console.log(wordToGuess);
 
-  // Cette fonction permet d'ajouter au tableau les lettres testées. 
-  // Si la lettre testée n'est pas contenue dans le mot à trouver, on passe a la suite
-  function addGuessedLetter(letter: string) {
+
+  const addGuessedLetter = useCallback((letter: string) => {
     if (guessedLetters.includes(letter)) return 
     setGuessedLetters(currenLetters => [...currenLetters, letter])
-  }
+  },[guessedLetters])
+
+  // Cette fonction permet d'ajouter au tableau les lettres testées. 
+  // Si la lettre testée n'est pas contenue dans le mot à trouver, on passe a la suite
+  // function addGuessedLetter(letter: string) {
+  //  if (guessedLetters.includes(letter)) return 
+  //   setGuessedLetters(currenLetters => [...currenLetters, letter])
+  // }
 
   useEffect(() => {
 
@@ -41,7 +47,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler)
     }
-  },[])
+  },[guessedLetters])
 
   return (
     <div style={{
