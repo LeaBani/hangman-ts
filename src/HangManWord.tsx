@@ -8,8 +8,9 @@ export function HangmanWord({ guessedLetters, wordToGuess, reveal=false } : Hang
 
     // const word = "test";
     // const guessedLetter = ["t"];
-    
 
+    console.log("wordToGuess", wordToGuess);
+    
     return <div style={{
         display: "flex",
         gap: ".25em",

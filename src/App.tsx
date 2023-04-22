@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
+
 import words from "./wordList.json";
-import { HangmanDrawing } from "./HangManDrawing";
-import { HangmanWord } from "./HangManWord";
+
+import { HangmanDrawing } from "./HangmanDrawing";
+import { HangmanWord } from "./HangmanWord";
 import { Keyboard } from "./Keyboard";
 
-function getWord() {
+function getWord() { // on génère un mot aléatoire parmis la liste
   return words[Math.floor(Math.random() * words.length)]
 }
 
@@ -12,7 +14,7 @@ function App() {
 
   const [wordToGuess, setWordToGuess] = useState(getWord);
 
-  console.log('wordToGuess', wordToGuess);
+  // console.log('App', wordToGuess);
 
   const [guessedLetters, setGuessedLetters] = useState<string[]>([])
   
@@ -55,6 +57,7 @@ function App() {
     return () => {
       document.removeEventListener("keypress", handler)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[guessedLetters])
 
   // gestion du rafraichissement automatique de la page lors que le jeu est terminé

@@ -1,25 +1,25 @@
 const HEAD =(
-    <div style={{width: "50px", height: "50px", borderRadius:"100%", border: "10px solid black", position: "absolute", top:"50px", right: "-30px"}} />
+    <div style={{width: "50px", height: "50px", borderRadius:"100%", border: "10px solid black", position: "absolute", top:"50px", right: "-30px"}} key={"head"}/>
 )
 
 const BODY =(
-    <div style={{width: "10px", height: "100px", background: "black", position: "absolute", top:"120px", right: "0"}} />
+    <div style={{width: "10px", height: "100px", background: "black", position: "absolute", top:"120px", right: "0"}} key={"body"}/>
 )
 
 const RIGHT_ARM =(
-    <div style={{width: "100px", height: "10px", background: "black", position: "absolute", top:"150px", right: "-100px", rotate: "-30deg", transformOrigin: "left bottom"}} />
+    <div style={{width: "100px", height: "10px", background: "black", position: "absolute", top:"150px", right: "-100px", rotate: "-30deg", transformOrigin: "left bottom"}} key={"rightarm"}/>
 )
 
 const LEFT_ARM =(
-    <div style={{width: "100px", height: "10px", background: "black", position: "absolute", top:"150px", right: "10px", rotate: "30deg", transformOrigin: "right bottom"}} />
+    <div style={{width: "100px", height: "10px", background: "black", position: "absolute", top:"150px", right: "10px", rotate: "30deg", transformOrigin: "right bottom"}} key={"leftarm"}/>
 )
 
 const RIGHT_LEG =(
-    <div style={{width: "100px", height: "10px", background: "black", position: "absolute", top:"210px", right: "-90px", rotate: "60deg", transformOrigin: "left bottom"}} />
+    <div style={{width: "100px", height: "10px", background: "black", position: "absolute", top:"210px", right: "-90px", rotate: "60deg", transformOrigin: "left bottom"}} key={"rightleg"} />
 )
 
 const LEFT_LEG =(
-    <div style={{width: "100px", height: "10px", background: "black", position: "absolute", top:"210px", right: "0px", rotate: "-60deg", transformOrigin: "right bottom"}} />
+    <div style={{width: "100px", height: "10px", background: "black", position: "absolute", top:"210px", right: "0px", rotate: "-60deg", transformOrigin: "right bottom"}} key={"lefthead"}/>
 )
 
 // Lors de la déclaration des membres du corps, il est important de respecter l'odre d'apparition des éléments pour le jeu
@@ -32,6 +32,7 @@ type HangmanDrawingProps = {
 
 
 export function HangmanDrawing({ numberOfGuesses } : HangmanDrawingProps) {
+
     return (<div style={{
         position: "relative",
     }}>

@@ -14,7 +14,7 @@ export function Keyboard({
     inactiveLetters, 
     addGuessedLetter
 } : KeyboardProps ) {
-    
+      
     return (
     
     <div style={{ display:"grid", gridTemplateColumns: "repeat(auto-fit, minmax(75px, 1fr))", gap: ".5rem"}}>
